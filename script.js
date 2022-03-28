@@ -1,7 +1,9 @@
 const inputField = document.querySelector("#input-field");
+let operationArray = [];
+let currentNumber = "";
+let operator = "";
 
 const operate = (numsArray, operator) => {
-  console.log(operator);
   let result;
   if (operator === "add") {
     result = add(numsArray);
@@ -10,9 +12,10 @@ const operate = (numsArray, operator) => {
   } else if (operator === "divide") {
     result = divide(numsArray);
   } else if (operator === "multiply") {
-    result = multiply(numsArray)
+    result = multiply(numsArray);
   }
   inputField.textContent = result;
+  return result;
 }; 
 
 const add = arr => arr.reduce((a, b) => a + b);
@@ -20,44 +23,50 @@ const subtract = arr => arr.reduce((a, b) => a - b);
 const multiply = arr => arr.reduce((a, b) => a * b);
 const divide = arr => arr.reduce((a, b) => a / b);
 
-let operationArray = []
-let currentNumber = "";
-let operator = "";
-
 const equals = document.querySelector("#equals");
 equals.addEventListener("click", () => {
   operationArray.push(Number.parseInt(currentNumber, 10));
   console.log(operationArray);
-  inputField.textContent = "";
   currentNumber = "";
   operate(operationArray, operator);
+  operationArray.push(operate(operationArray, operator));
+  operationArray.splice(0, 2);
+  console.log(operationArray);
 })
 
 const addition = document.querySelector("#add");
 addition.addEventListener("click", () => {
   operator = "add";
-  operationArray.push(Number.parseInt(currentNumber, 10));
+  if (operationArray.length === 0) {
+    operationArray.push(Number.parseInt(currentNumber, 10));
+  } 
   inputField.textContent = "+";
   currentNumber = "";
 })
 const subtraction = document.querySelector("#subtract");
 subtraction.addEventListener("click", () => {
   operator = "subtract";
-  operationArray.push(Number.parseInt(currentNumber, 10));
+  if (operationArray.length === 0) {
+    operationArray.push(Number.parseInt(currentNumber, 10));
+  }
   inputField.textContent = "-";
   currentNumber = "";
 })
 const multiplication = document.querySelector("#multiply");
 multiplication.addEventListener("click", () => {
   operator = "multiply";
-  operationArray.push(Number.parseInt(currentNumber, 10));
+  if (operationArray.length === 0) {
+    operationArray.push(Number.parseInt(currentNumber, 10));
+  }
   inputField.textContent = "*";
   currentNumber = "";
 })
 const division = document.querySelector("#divide");
 division.addEventListener("click", () => {
   operator = "divide";
-  operationArray.push(Number.parseInt(currentNumber, 10));
+  if (operationArray.length === 0) {
+    operationArray.push(Number.parseInt(currentNumber, 10));
+  }
   inputField.textContent = "/";
   currentNumber = "";
 })
