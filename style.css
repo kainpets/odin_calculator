@@ -30,7 +30,7 @@ body {
   font-size: 2rem;
   border: 1px solid white;
   outline: none;
-  background-color: rgba(255, 255, 255, .75);
+  
 }
 
 #parent > button:hover {
@@ -48,8 +48,15 @@ body {
   font-size: 2rem;
 }
 
+[data-number] {
+  background-color: rgba(255, 255, 255, .75);
+}
+
+[data-operator] {
+  background-color: rgba(255, 255, 255, .3);
+}
+
 #previous-input-field {
-  color: rgba(255, 255, 255, .4);
   font-size: 1.5rem;
 }
 
@@ -88,6 +95,7 @@ body {
 }
 #clear {
   grid-area: clear;
+  background-color: rgba(255, 255, 255, .75);
 }
 #equals {
   grid-area: equal;
@@ -105,7 +113,10 @@ body {
 #divide {
   grid-area: divide;
 }
-
 #output {
   grid-area: output;
+}
+#delete {
+  grid-area: delete;
+  background-color: rgba(255, 255, 255, .75);
 }
