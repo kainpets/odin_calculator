@@ -1,123 +1,103 @@
-const inputField = document.querySelector("#input-field");
-let operationArray = [];
-let currentNumber = "";
-let operator = "";
-
-const operate = (numsArray, operator) => {
-  let result;
-  if (operator === "add") {
-    result = add(numsArray);
-  } else if (operator === "subtract") {
-    result = subtract(numsArray);
-  } else if (operator === "divide") {
-    result = divide(numsArray);
-  } else if (operator === "multiply") {
-    result = multiply(numsArray);
+class Calculator {
+  constructor(previousNumberText, currentNumberText) {
+    this.previousNumberText = previousNumberText;
+    this.currentNumberText = currentNumberText;
+    this.clear();
   }
-  inputField.textContent = result;
-  return result;
-}; 
 
-const add = arr => arr.reduce((a, b) => a + b);
-const subtract = arr => arr.reduce((a, b) => a - b);
-const multiply = arr => arr.reduce((a, b) => a * b);
-const divide = arr => arr.reduce((a, b) => a / b);
-
-const equals = document.querySelector("#equals");
-equals.addEventListener("click", () => {
-  operationArray.push(Number.parseInt(currentNumber, 10));
-  console.log(operationArray);
-  currentNumber = "";
-  operate(operationArray, operator);
-  operationArray.push(operate(operationArray, operator));
-  operationArray.splice(0, 2);
-  console.log(operationArray);
-})
-
-const addition = document.querySelector("#add");
-addition.addEventListener("click", () => {
-  operator = "add";
-  if (operationArray.length === 0) {
-    operationArray.push(Number.parseInt(currentNumber, 10));
-  } 
-  inputField.textContent = "+";
-  currentNumber = "";
-})
-const subtraction = document.querySelector("#subtract");
-subtraction.addEventListener("click", () => {
-  operator = "subtract";
-  if (operationArray.length === 0) {
-    operationArray.push(Number.parseInt(currentNumber, 10));
+  clear() {
+    this.currentNumber = "";
+    this.previousNumber = "";
+    this.operation = undefined;
   }
-  inputField.textContent = "-";
-  currentNumber = "";
-})
-const multiplication = document.querySelector("#multiply");
-multiplication.addEventListener("click", () => {
-  operator = "multiply";
-  if (operationArray.length === 0) {
-    operationArray.push(Number.parseInt(currentNumber, 10));
+
+  delete() {
+    this.currentNumber = this.currentNumber.toString().slice(0, -1);
   }
-  inputField.textContent = "*";
-  currentNumber = "";
-})
-const division = document.querySelector("#divide");
-division.addEventListener("click", () => {
-  operator = "divide";
-  if (operationArray.length === 0) {
-    operationArray.push(Number.parseInt(currentNumber, 10));
+
+  appendNumber(number) {
+    if (number === '.' && this.currentNumber.includes('.')) return
+    this.currentNumber = this.currentNumber.toString() + number.toString();
   }
-  inputField.textContent = "/";
-  currentNumber = "";
+
+  chooseOperation(operation) {
+    if (this.currentNumber === '') return
+    if (this.previousNumber !== '') {
+      this.compute()
+    }
+    this.operation = operation;
+    this.previousNumber = this.currentNumber;
+    this.currentNumber = "";
+  }
+
+  compute() {
+    let computation;
+    const previousNum = parseFloat(this.previousNumber);
+    const currentNum = parseFloat(this.currentNumber);
+    switch(this.operation) {
+      case "+":
+        computation = previousNum + currentNum;
+        break;
+      case "-":
+        computation = currentNum - previousNum;
+        break;
+      case "*":
+        computation = currentNum * previousNum;
+        break;
+      case "÷":
+        computation = previousNum / currentNum;
+        break;
+    }
+    this.currentNumber = computation;
+    this.operation = undefined;
+    this.previousNumber = "";
+  }
+
+  updateDisplay() {
+    this.currentNumberText.innerText = this.currentNumber;
+    if (this.operation != null) {
+      this.previousNumberText.innerText = `${this.previousNumber} ${this.operation}`
+    } else {
+      this.previousNumberText.innerText = "";
+    }
+  }
+}
+
+const numberButtons = document.querySelectorAll("[data-number]");
+const operationButtons = document.querySelectorAll("[data-operator]");
+const deleteButton = document.querySelector("[data-delete]");
+const clearAllButton = document.querySelector("[data-clear]");
+const previousNumberText = document.querySelector("[data-previous-number-input]");
+const currentNumberText = document.querySelector("[data-current-number-input]");
+const equalsButton = document.querySelector("[data-equals]");
+
+const calculator = new Calculator(previousNumberText, currentNumberText);
+
+numberButtons.forEach(button => {
+  button.addEventListener("click" , () => {
+    calculator.appendNumber(button.innerText);
+    calculator.updateDisplay();
+  })
 })
 
-const one = document.querySelector("#one");
-one.addEventListener("click", () => {
-  currentNumber += 1;
-  inputField.textContent = currentNumber;
+operationButtons.forEach(button => {
+  button.addEventListener("click" , () => {
+    calculator.chooseOperation(button.innerText);
+    calculator.updateDisplay();
+  })
 })
-const two = document.querySelector("#two");
-two.addEventListener("click", () => {
-  currentNumber += 2;
-  inputField.textContent = currentNumber;
+
+equalsButton.addEventListener("click", () => {
+  calculator.compute();
+  calculator.updateDisplay();
 })
-const three = document.querySelector("#three");
-three.addEventListener("click", () => {
-  currentNumber += 3;
-  inputField.textContent = currentNumber;
+
+deleteButton.addEventListener("click", () => {
+  calculator.delete();
+  calculator.updateDisplay();
 })
-const four = document.querySelector("#four");
-four.addEventListener("click", () => {
-  currentNumber += 4;
-  inputField.textContent = currentNumber;
-})
-const five = document.querySelector("#five");
-five.addEventListener("click", () => {
-  currentNumber += 5;
-  inputField.textContent = currentNumber;
-})
-const six = document.querySelector("#six");
-six.addEventListener("click", () => {
-  currentNumber += 6;
-  inputField.textContent = currentNumber;
-})
-const seven = document.querySelector("#seven");
-seven.addEventListener("click", () => {
-  currentNumber += 7;
-  inputField.textContent = currentNumber;
-})
-const eight = document.querySelector("#eight");
-eight.addEventListener("click", () => {
-  currentNumber += 8;
-  inputField.textContent = currentNumber;
-})
-const nine = document.querySelector("#nine");
-nine.addEventListener("click", () => {
-  currentNumber += 9;
-  inputField.textContent = currentNumber;
-})
-const zero = document.querySelector("#zero");
-zero.addEventListener("click", () => {
-  currentNumber += 0;
-  inputField.textContent = currentNumber;
+
+clearAllButton.addEventListener("click", () => {
+  calculator.clear();
+  calculator.updateDisplay();
 })
