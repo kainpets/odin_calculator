@@ -39,7 +39,7 @@ class Calculator {
         computation = previousNum + currentNum;
         break;
       case "-":
-        computation = currentNum - previousNum;
+        computation = previousNum - currentNum;
         break;
       case "*":
         computation = currentNum * previousNum;
